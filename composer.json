@@ -1,0 +1,24 @@
+{
+    "name": "xel/skeleton",
+    "description": "Framework Skeleton for xel framework",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Bxel07",
+            "email": "yogipratama.ut@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Xel\\Devise\\": "devise/",
+            "Xel\\Setup\\" : "setup/"
+        },
+        "files": [
+            "setup/Dock/DockEntry.php"
+        ]
+    },
+    "require": {
+        "xel/asycn": "dev-main"
+    },
+    "minimum-stability": "dev"
+}
