@@ -1,0 +1,12 @@
+<?php return array (
+  0 => 
+  array (
+    'Uri' => '/',
+    'RequestMethod' => 'GET',
+    'Class' => 'Xel\\Devise\\Service\\RestApi\\Service',
+    'Method' => 'index',
+    'Middlewares' => 
+    array (
+    ),
+  ),
+);

@@ -14,7 +14,8 @@
             "Xel\\Setup\\" : "setup/"
         },
         "files": [
-            "setup/Dock/DockEntry.php"
+            "setup/Dock/DockEntry.php",
+            "devise/Service/AppClassBinder/ServiceRegister.php"
         ]
     },
     "require": {

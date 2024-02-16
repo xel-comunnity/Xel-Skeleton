@@ -1,5 +1,6 @@
 <?php
 
+
 return [
     'api_server' => [
         'host' => 'http://localhost',
@@ -8,6 +9,7 @@ return [
         'options' => [
             'worker_num' => 3,
             'enable_coroutine' => true,
+//            'daemonize' => 1,
 //            'http_compression' => true,
 //            'http_gzip_level' => 9,
 //            'dispatch_mode' => 1,
@@ -16,3 +18,4 @@ return [
     ],
 
 ];
+

@@ -1,14 +1,13 @@
 <?php
 
 namespace Xel\Setup\Dock;
-use HttpSoft\Message\ResponseFactory;
-use HttpSoft\Message\ServerRequestFactory;
-use HttpSoft\Message\StreamFactory;
-use HttpSoft\Message\UploadedFileFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Xel\Async\Http\Response;
-use Xel\Devise\Service\RestApi\Service;
+use Xel\Async\Router\RouterRunner;
 use function DI\create;
 use function Xel\Container\dependency\containerEntry;
+use function Xel\Devise\Service\AppClassBinder\serviceMiddlewareGlobals;
+use function Xel\Devise\Service\AppClassBinder\serviceRegister;
 
 function DockEntry(): array
 {
@@ -26,23 +25,28 @@ function DockEntry(): array
              */
             "RouterCache" => false,
             "RouterCachePath" => __DIR__."/../../writeable/routerCache",
+            "RouterRunner" => create(RouterRunner::class),
 
             /**
              * Http Protocol Container
              */
 
-            "ServerFactory" =>  create(ServerRequestFactory::class),
-            "StreamFactory" =>  create(StreamFactory::class),
-            "UploadFactory" =>  create(UploadedFileFactory::class),
-            "ResponseFactory" =>  create(ResponseFactory::class),
+            "ServerFactory" =>  create(Psr17Factory::class),
+            "StreamFactory" =>  create(Psr17Factory::class),
+            "UploadFactory" =>  create(Psr17Factory::class),
+            "ResponseFactory" =>  create(Psr17Factory::class),
             "ResponseInterface" =>  create(Response::class),
 
             /**
              * Service Container
              */
-            "ServiceDock" => [
-                Service::class
-            ]
+            "ServiceDock" => serviceRegister(),
+
+
+            /**
+             * Global Middleware
+             */
+            "GlobalMiddleware" => serviceMiddlewareGlobals()
 
         ]
     );
