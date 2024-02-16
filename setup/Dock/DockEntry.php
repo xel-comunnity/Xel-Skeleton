@@ -4,6 +4,7 @@ namespace Xel\Setup\Dock;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Xel\Async\Http\Response;
 use Xel\Async\Router\RouterRunner;
+use Xel\Devise\Service\RestApi\AbstractService;
 use function DI\create;
 use function Xel\Container\dependency\containerEntry;
 use function Xel\Devise\Service\AppClassBinder\serviceMiddlewareGlobals;
@@ -41,6 +42,7 @@ function DockEntry(): array
              * Service Container
              */
             "ServiceDock" => serviceRegister(),
+            "AbstractService" => AbstractService::class,
 
 
             /**
