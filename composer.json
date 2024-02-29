@@ -19,7 +19,8 @@
         ]
     },
     "require": {
-        "xel/asycn": "dev-main"
+        "xel/asycn": "dev-main",
+        "xel/logger": "dev-main"
     },
     "minimum-stability": "dev"
 }

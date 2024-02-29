@@ -1,7 +1,9 @@
 <?php
 
 namespace Xel\Setup\Dock;
+use Monolog\Handler\FirePHPHandler;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Xel\Async\Http\Applications;
 use Xel\Async\Http\Response;
 use Xel\Async\Router\RouterRunner;
 use Xel\Devise\Service\RestApi\AbstractService;
@@ -13,13 +15,20 @@ use function Xel\Devise\Service\AppClassBinder\serviceRegister;
 function DockEntry(): array
 {
     $config = require __DIR__ . "/../Config/Config.php";
-
+    $logging = require __DIR__."/../Config/Logging.php";
     return containerEntry(
         [
             /**
              * Server config
              */
+            "Application" => create(Applications::class),
             "server" => $config,
+
+            /**
+             * Logging
+             */
+            "Logging" => $logging,
+            "FirePHPHandler" => create(FirePHPHandler::class),
 
             /**
              * Router Config
@@ -49,7 +58,6 @@ function DockEntry(): array
              * Global Middleware
              */
             "GlobalMiddleware" => serviceMiddlewareGlobals()
-
         ]
     );
 }

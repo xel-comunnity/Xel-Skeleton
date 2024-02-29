@@ -1,48 +1,27 @@
 <?php
 
 use DI\ContainerBuilder;
-use Xel\Async\Http\Applications;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Xel\Container\XelContainer;
 use Xel\Container\Dock;
-use function Xel\Async\Router\Attribute\Generate\{loaderClass,loadCachedClass};
+use Xel\Setup\Bootstrap\App;
 use function Xel\Setup\Dock\DockEntry;
 
 require __DIR__."/../vendor/autoload.php";
 
+$container = new ContainerBuilder();
+// ? container builder
+$xelContainer = new XelContainer($container);
+// ? Load container and launch
+$dock = new Dock($xelContainer, DockEntry());
+// ? launch
+$injection = $dock->launch();
+
+$app = new App($injection);
+
 try {
-
-    /**
-     * Register Container
-     */
-    $DIContainer = new ContainerBuilder();
-    $xelContainer = new XelContainer($DIContainer);
-    $Dock = new Dock($xelContainer, DockEntry());
-    $container = $Dock->launch();
-    $Class = $container->get("ServiceDock");
-
-    /**
-     * Server config
-     */
-    $Config = $container->get('server');
-
-    /**
-     * Class Cache Loader
-     *
-     */
-    $path = $container->get("RouterCachePath");
-
-    loaderClass($Class, $path);
-    $cacheClass = loadCachedClass($path);
-
-    /**
-     * Launch Class
-     */
-    $app = new Applications();
-    $app
-        ->initialize($Config)
-        ->onEvent($cacheClass, $container)
-        ->run();
-
-}catch (ReflectionException $e){
-    echo "Reflection error : ". $e->getMessage();
+    $app->init();
+} catch (DependencyException|NotFoundException $e) {
+    echo "error : ".$e->getMessage();
 }
