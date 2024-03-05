@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Application;
+use Xel\Setup\Command\CommandRunner;
+
+require __DIR__ . '/vendor/autoload.php';
+
+/**
+ * Start the console application.
+ */
+$app = new Application('XEL Commandline', '1.0.0');
+
+try {
+    CommandRunner::init($app);
+} catch (Exception $e) {
+   echo "Critical : ".$e->getMessage();
+}

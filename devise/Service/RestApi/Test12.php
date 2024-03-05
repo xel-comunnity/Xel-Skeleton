@@ -1,21 +1,20 @@
 <?php
-
+    
 namespace Xel\Devise\Service\RestApi;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Psr\Http\Message\ResponseInterface;
 use Xel\Async\Router\Attribute\GET;
-use Xel\Async\Router\Attribute\Middlewares;
 
-class Service extends AbstractService
-{
+class Test12 extends AbstractService
+{   
     /**
      * @throws DependencyException
      * @throws NotFoundException
      */
-    #[GET("/")]
+    #[GET("/test12")]
     public function index(): ResponseInterface
     {
         return $this->serverResponse->plain("Hello Xel", 200);
-    }
+    }  
 }

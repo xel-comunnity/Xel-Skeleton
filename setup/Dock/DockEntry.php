@@ -57,7 +57,7 @@ function DockEntry(): array
             /**
              * Global Middleware
              */
-            "GlobalMiddleware" => serviceMiddlewareGlobals()
+            "GlobalMiddleware" => serviceMiddlewareGlobals(),
         ]
     );
 }
