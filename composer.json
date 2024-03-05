@@ -19,6 +19,7 @@
         ]
     },
     "require": {
+        "php": "^8.2",
         "xel/asycn": "dev-main",
         "xel/logger": "dev-main",
         "symfony/console": "7.1.x-dev",
