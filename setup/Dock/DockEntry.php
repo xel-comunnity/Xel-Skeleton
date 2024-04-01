@@ -3,10 +3,10 @@
 namespace Xel\Setup\Dock;
 use Monolog\Handler\FirePHPHandler;
 use Nyholm\Psr7\Factory\Psr17Factory;
-use Xel\Async\Http\Applications;
 use Xel\Async\Http\Response;
 use Xel\Async\Router\RouterRunner;
-use Xel\Devise\Service\RestApi\AbstractService;
+use Xel\Devise\BaseData\Basedata;
+use Xel\Devise\Service\AbstractService;
 use function DI\create;
 use function Xel\Container\dependency\containerEntry;
 use function Xel\Devise\Service\AppClassBinder\serviceMiddlewareGlobals;
@@ -14,15 +14,21 @@ use function Xel\Devise\Service\AppClassBinder\serviceRegister;
 
 function DockEntry(): array
 {
-    $config = require __DIR__ . "/../Config/Config.php";
+    $config = require __DIR__ . "/../Config/Server.php";
     $logging = require __DIR__."/../Config/Logging.php";
+    $dbConfig = require __DIR__."/../Config/DBConfig.php";
+
     return containerEntry(
         [
             /**
              * Server config
              */
-            "Application" => create(Applications::class),
             "server" => $config,
+
+            /**
+             * Db Config
+             */
+            "dbConfig" => $dbConfig,
 
             /**
              * Logging
@@ -52,8 +58,6 @@ function DockEntry(): array
              */
             "ServiceDock" => serviceRegister(),
             "AbstractService" => AbstractService::class,
-
-
             /**
              * Global Middleware
              */

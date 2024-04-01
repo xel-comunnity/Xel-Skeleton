@@ -1,9 +1,13 @@
 <?php
 
 namespace Xel\Devise\Service\AppClassBinder;
-use Xel\Async\Router\Attribute\Middlewares;
 use Xel\Devise\Service\Console\CreateConsole;
+use Xel\Devise\Service\Console\CreateMigration;
 use Xel\Devise\Service\Console\MiddlewareGenerator;
+use Xel\Devise\Service\Console\MigrationDrop;
+use Xel\Devise\Service\Console\MigrationMigrate;
+use Xel\Devise\Service\Console\MigrationMigrateFresh;
+use Xel\Devise\Service\Console\MigrationRollback;
 use Xel\Devise\Service\Console\ProductionCommand;
 use Xel\Devise\Service\Console\RestAPIGenerator;
 use Xel\Devise\Service\Console\RouterDelete;
@@ -19,6 +23,13 @@ function serviceRegister(): array
 {
     return [
         Service::class,
+    ];
+}
+
+function serviceModelRegister(): array
+{
+    return [
+
     ];
 }
 
@@ -40,6 +51,11 @@ function serviceConsoleRegister():array
         RouterList::class,
         RouterDelete::class,
         RouterRegenerate::class,
-        MiddlewareGenerator::class
+        MiddlewareGenerator::class,
+        MigrationMigrate::class,
+        MigrationMigrateFresh::class,
+        MigrationRollback::class,
+        MigrationDrop::class,
+        CreateMigration::class
     ];
 }

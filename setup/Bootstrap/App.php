@@ -52,14 +52,13 @@ final readonly class App
          */
         $this->loggerInit();
 
-        /**
-         * @var Applications $app
-         */
-        $app = $this->containerInstance()->get('Application');
-        $app
-            ->initialize($serverConfig)
-            ->onEvent($this->routerConfig(), $this->containerInstance())
-            ->run();
+        $app = new Applications(
+            $serverConfig,
+            $this->routerConfig(),
+            $this->containerInstance()->get('dbConfig'),
+            $this->containerInstance()
+        );
+        $app->initialize();
     }
 
     private function containerInstance(): Container
