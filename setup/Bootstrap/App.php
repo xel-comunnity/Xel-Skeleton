@@ -1,13 +1,12 @@
 <?php
 
 namespace Xel\Setup\Bootstrap;
-use DI\Container;
 use DI\ContainerBuilder;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Dotenv\Dotenv;
 use Exception;
-use Xel\Async\Http\Applications;
+use Xel\Async\Http\Application_v3;
 use Xel\Container\Dock;
 use Xel\Container\XelContainer;
 use Xel\Logger\ApplicationLogger;
@@ -16,8 +15,6 @@ use function Xel\Setup\Dock\DockEntry;
 
 final readonly class App
 {
-    private Container $containerBuilder;
-
     /**
      * @throws DependencyException
      * @throws NotFoundException
@@ -34,12 +31,12 @@ final readonly class App
         // ? Load container and launch
         $dock = new Dock($xelContainer, DockEntry());
         // ? launch
-        $this->containerBuilder = $dock->launch();
+        $dependency = $dock->launch();
 
         /**
          * @var array<int|string, mixed $serverConfig>
          */
-        $serverConfig = $this->containerInstance()->get('server');
+        $serverConfig = $dependency->get('server');
 
         /**
          * DOTENV init
@@ -47,57 +44,35 @@ final readonly class App
         $dotenv = Dotenv::createImmutable(__DIR__."/../../");
         $dotenv->safeLoad();
 
-        /**
-         * Logger init
-         */
-        $this->loggerInit();
 
-        $app = new Applications(
-            $serverConfig,
-            $this->routerConfig(),
-            $this->containerInstance()->get('dbConfig'),
-            $this->containerInstance()
-        );
-        $app->initialize();
-    }
-
-    private function containerInstance(): Container
-    {
-        return $this->containerBuilder;
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function routerConfig(): ?array
-    {
         /**
          * Router class collection and path
          */
-        $class = $this->containerInstance()->get('ServiceDock');
-        $cache = $this->containerInstance()->get('RouterCachePath');
+        $class = $dependency->get('ServiceDock');
+        $cache = $dependency->get('RouterCachePath');
+        $loaderClass = loaderClass($class, $cache, $_ENV['BUILD']);
 
         /**
-         * Load clas and Generate route cache
+         * Logger init
          */
-
-        return  loaderClass($class, $cache, $_ENV['BUILD']);
-    }
-
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    private function loggerInit(): void
-    {
-        /**
-         * Logger Init
-         */
-        $loggerConfig = $this->containerInstance()->get('Logging');
-        $FireHandler =  $this->containerInstance()->get('FirePHPHandler');
+        $loggerConfig = $dependency->get('Logging');
+        $FireHandler =  $dependency->get('FirePHPHandler');
 
         ApplicationLogger::init($loggerConfig, $FireHandler);
+
+        /**
+         * Launch Instance
+         */
+        $app = new Application_v3(
+            $serverConfig,
+            $loaderClass,
+            $dependency->get('dbConfig'),
+            $dependency
+        );
+        $app
+            ->gemstoneLimiter()
+            ->router()
+            ->init();
     }
 
 }

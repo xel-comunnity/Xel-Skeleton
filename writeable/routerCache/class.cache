@@ -9,4 +9,34 @@
     array (
     ),
   ),
+  1 => 
+  array (
+    'Uri' => '/create',
+    'RequestMethod' => 'POST',
+    'Class' => 'Xel\\Devise\\Service\\RestApi\\Service',
+    'Method' => 'create',
+    'Middlewares' => 
+    array (
+    ),
+  ),
+  2 => 
+  array (
+    'Uri' => '/update/{id}',
+    'RequestMethod' => 'PUT',
+    'Class' => 'Xel\\Devise\\Service\\RestApi\\Service',
+    'Method' => 'update',
+    'Middlewares' => 
+    array (
+    ),
+  ),
+  3 => 
+  array (
+    'Uri' => '/delete/{id}',
+    'RequestMethod' => 'DELETE',
+    'Class' => 'Xel\\Devise\\Service\\RestApi\\Service',
+    'Method' => 'delete',
+    'Middlewares' => 
+    array (
+    ),
+  ),
 );

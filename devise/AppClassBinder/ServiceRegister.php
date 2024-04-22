@@ -1,6 +1,7 @@
 <?php
 
 namespace Xel\Devise\Service\AppClassBinder;
+use Xel\Devise\BaseData\Projects;
 use Xel\Devise\Service\Console\CreateConsole;
 use Xel\Devise\Service\Console\CreateMigration;
 use Xel\Devise\Service\Console\MiddlewareGenerator;
@@ -15,28 +16,30 @@ use Xel\Devise\Service\Console\RouterGenerator;
 use Xel\Devise\Service\Console\RouterList;
 use Xel\Devise\Service\Console\RouterRegenerate;
 use Xel\Devise\Service\Console\ServerCommand;
-use Xel\Devise\Service\Middleware\CorsMiddleware;
+use Xel\Devise\Service\Console\TokenGeneratorConsole;
+use Xel\Devise\Service\RestApi\Authentication;
+use Xel\Devise\Service\RestApi\sample;
 use Xel\Devise\Service\RestApi\Service;
-
 
 function serviceRegister(): array
 {
     return [
         Service::class,
+        Authentication::class,
+        sample::class
     ];
 }
 
 function serviceModelRegister(): array
 {
     return [
-
+        "projects" => Projects::class
     ];
 }
 
 function serviceMiddlewareGlobals(): array
 {
     return [
-        CorsMiddleware::class
     ];
 }
 
@@ -56,6 +59,7 @@ function serviceConsoleRegister():array
         MigrationMigrateFresh::class,
         MigrationRollback::class,
         MigrationDrop::class,
-        CreateMigration::class
+        CreateMigration::class,
+        TokenGeneratorConsole::class
     ];
 }

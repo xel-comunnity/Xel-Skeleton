@@ -3,9 +3,13 @@ return [
     'api_server' => [
         'host' => 'http://localhost',
         'port' => 9501,
-        'mode' => 2,
+        'mode' => 1,
         'options' => [
-            'worker_num' => 35,
+            "enable_static_handler" => true,
+            "document_root" => dirname(__DIR__, 2),
+            'worker_num' => swoole_cpu_num(),
+//            'task_worker_num'=>16,
+            'task_enable_coroutine' => true, // optional to turn on task coroutine support
 //            'daemonize' => 1,
 //            'http_gzip_level' => 9,
 
@@ -20,10 +24,8 @@ return [
             'enable_reuse_port'     => true,
             'enable_coroutine'      => true,
             'http_compression'      => true,
-            'enable_static_handler' => false,
             'buffer_output_size'    => swoole_cpu_num() * 1024 * 1024,
         ],
     ],
-
 ];
 

@@ -21,9 +21,6 @@ class CommandRunner
         $app->run();
     }
 
-    /**
-     * @return void
-     */
     private static function makeInstance(): void
     {
         $commandList = serviceConsoleRegister();

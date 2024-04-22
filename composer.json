@@ -16,7 +16,8 @@
         },
         "files": [
             "setup/Dock/DockEntry.php",
-            "devise/Service/AppClassBinder/ServiceRegister.php"
+            "devise/AppClassBinder/ServiceRegister.php",
+            "devise/Service/Gemstone/Csrf_Token_Producer.php"
         ]
     },
     "require": {
@@ -25,7 +26,13 @@
         "xel/logger": "dev-main",
         "symfony/console": "7.1.x-dev",
         "vlucas/phpdotenv": "^5.6@dev",
-        "ext-pdo": "*"
+        "ext-pdo": "*",
+        "ext-memcached": "*",
+        "firebase/php-jwt": "dev-main",
+        "swoole/ide-helper": "@dev"
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "scripts": {
+        "watcher-css": "./tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch"
+    }
 }

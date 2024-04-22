@@ -1,19 +1,30 @@
 <?php
-
 namespace Xel\Devise\Service\Middleware;
+use DI\Container;
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+use Xel\Async\Contract\MiddlewareInterfaces;
+use Xel\Async\Contract\RequestHandlerInterfaces;
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-class CorsMiddleware implements MiddlewareInterface
+class CorsMiddleware implements MiddlewareInterfaces
 {
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    public function __construct(private Container $container)
+    {}
+    public function process(Request $request, RequestHandlerInterfaces $handler, Response $response): void
     {
-        $response = $handler->handle($request);
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE OPTIONS')
-            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        $origin = $request->header['origin'] ?? '*'; // Allow any origin (less secure)
+        $response->header('Access-Control-Allow-Origin', $origin);
+        $response->header('Access-Control-Allow-Credentials', 'true');
+        $response->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        $response->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin, X-GEMSTONE-AUTH');
+        $response->header('Access-Control-Max-Age', 86400);
+
+        if ($request->getMethod() == 'OPTIONS') {
+            $response->status(200);
+            $response->end();
+            return;
+        }
+
+        $handler->handle($request);
     }
 }

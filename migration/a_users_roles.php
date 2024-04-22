@@ -4,19 +4,20 @@ use Exception;
 use Xel\DB\QueryBuilder\Migration\Migration;
 use Xel\DB\QueryBuilder\Migration\Schema;
 use Xel\DB\QueryBuilder\Migration\TableBuilder;
-use function DI\string;
 
-class m_20240329_192226_users extends Migration
+class a_users_roles extends Migration
 {
     /**
      * @throws Exception
      */
     public function up(): void
     {
-        Schema::create('m_20240329_192226_users',function (TableBuilder $tableBuilder){
+        Schema::create('a_users_roles',function (TableBuilder $tableBuilder){
             $tableBuilder->id()
-                ->string('name')
-                ->string('email');
+                ->unsignedINT('user_id')
+                ->unsignedINT('role_id')
+                ->foreign('user_id','users','id')
+                ->foreign('role_id','roles','id');
         })->execute();
     }
 
@@ -25,6 +26,6 @@ class m_20240329_192226_users extends Migration
      */
     public function down(): void
     {
-        Schema::drop('m_20240329_192226_users');
+        Schema::drop('a_users_roles');
     }
 }
