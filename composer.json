@@ -27,7 +27,6 @@
         "symfony/console": "7.1.x-dev",
         "vlucas/phpdotenv": "^5.6@dev",
         "ext-pdo": "*",
-        "ext-memcached": "*",
         "firebase/php-jwt": "dev-main",
         "swoole/ide-helper": "@dev"
     },

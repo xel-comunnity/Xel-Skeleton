@@ -49,4 +49,5 @@ class sample extends AbstractService
             $responses->json($result, false, 200);
         });    
     } 
+    
 }
