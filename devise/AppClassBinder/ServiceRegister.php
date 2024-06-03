@@ -17,8 +17,8 @@ use Xel\Devise\Service\Console\RouterList;
 use Xel\Devise\Service\Console\RouterRegenerate;
 use Xel\Devise\Service\Console\ServerCommand;
 use Xel\Devise\Service\Console\TokenGeneratorConsole;
-use Xel\Devise\Service\RestApi\Authentication;
-use Xel\Devise\Service\RestApi\sample;
+use Xel\Devise\Service\RestApi\Auth\Authentication;
+use Xel\Devise\Service\RestApi\csrfTokenMaker\CsrfTokenMaker;
 use Xel\Devise\Service\RestApi\Service;
 
 function serviceRegister(): array
@@ -26,7 +26,7 @@ function serviceRegister(): array
     return [
         Service::class,
         Authentication::class,
-        sample::class
+        CsrfTokenMaker::class,
     ];
 }
 
@@ -39,8 +39,7 @@ function serviceModelRegister(): array
 
 function serviceMiddlewareGlobals(): array
 {
-    return [
-    ];
+    return [];
 }
 
 function serviceConsoleRegister():array

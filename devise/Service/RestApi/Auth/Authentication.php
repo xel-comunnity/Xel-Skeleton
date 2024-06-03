@@ -1,6 +1,6 @@
 <?php
     
-namespace Xel\Devise\Service\RestApi;
+namespace Xel\Devise\Service\RestApi\Auth;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -25,24 +25,23 @@ class Authentication extends AbstractService
 
         $this->return
             ->workSpace(function (Responses $responses) use ($sanitize){
-                if (GemstoneAuthorization::attempt($sanitize, $responses,$this->container)){
-                    $payload = GemstoneAuthorization::encode(responses: $responses,payload: $sanitize, expired: 3600);
-                    $responses->json($payload, false, 201);
-
+                if (GemstoneAuthorization::attempt($sanitize, $this->container)){
+                    GemstoneAuthorization::giveAuthorization(responses: $responses, payload: $sanitize);
+                    $responses->json(["status"=>true, "message"=> "success authenticated"], false, 201);
                 }
                 $responses->json('not valid user', false, 401);
             });
     }
 
-    #[GET("/async")]
-    public function test(){
+    #[GET("/logout")]
+    public function logout():void{
         $this->return
-            ->doProcess(function(){
-                echo "hello";
-            })
-            ->afterExecute('test')
-            ->dispatch();
+        ->workSpace(function (Responses $responses){
+            GemstoneAuthorization::logout($responses);
+            $responses->json(['status' => true, 'message' => "success to logout"], false, 200);
+        });
     }
+
 
     /**
      * @throws DependencyException
@@ -54,8 +53,6 @@ class Authentication extends AbstractService
         $this->return
             ->workSpace(function (Responses $responses){
                 $responses->json('valid user', false, 200);
-            });
+        });
     }
-
-
 }

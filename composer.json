@@ -16,8 +16,7 @@
         },
         "files": [
             "setup/Dock/DockEntry.php",
-            "devise/AppClassBinder/ServiceRegister.php",
-            "devise/Service/Gemstone/Csrf_Token_Producer.php"
+            "devise/AppClassBinder/ServiceRegister.php"
         ]
     },
     "require": {

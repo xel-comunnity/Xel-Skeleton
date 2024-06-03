@@ -1,11 +1,8 @@
-<?php
-use function Xel\Devise\Service\Gemstone\csrf_token;
-?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Login Page</title>
-    <meta name="csrf-token" content="<?= csrf_token() ?>">
     <link rel="stylesheet" href="../../public/css/output.css">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -33,70 +30,57 @@ use function Xel\Devise\Service\Gemstone\csrf_token;
         </form>
         <div class="mt-6 text-center">
             <button id="protected-btn" class="bg-green-500 text-white rounded-lg py-2 px-4 font-medium hover:bg-green-600 transition duration-300">Get Protected Resource</button>
-            <button id="csrf-token-btn" class="bg-blue-500 text-white rounded-lg py-2 px-4 font-medium hover:bg-blue-600 transition duration-300 ml-2">Get CSRF Token</button>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        
+        import { makeRequestWithCsrfToken, makeRequest } from '../../public/js/request.js';
+
         const loginForm = document.getElementById('login-form');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const protectedBtn = document.getElementById('protected-btn');
-        const csrfTokenBtn = document.getElementById('csrf-token-btn');
 
-        loginForm.addEventListener('submit', (event) => {
+        loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const password = document.getElementById('password').value;  
 
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken
-                },
-                body: JSON.stringify({ email, password })
-            })
-            .then(response => {
+            try {
+                const response = await makeRequestWithCsrfToken('http://localhost:9501/login', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                // ? check the promise
                 if (response.ok) {
-                    // Handle successful login
                     alert('Login successful');
                 } else {
-                    // Handle login error
                     alert('Login failed');
                 }
-            })
-            .catch(error => {
+
+
+            } catch (error) {
                 alert('An error occurred:', error);
-            });
+            }
         });
 
-        protectedBtn.addEventListener('click', () => {
-            fetch('/protected', { credentials: 'include' })
-            .then(response => {
+        protectedBtn.addEventListener('click', async () => {
+            // ? check first access token is valid?
+            // ? if ok continue request , if not return error unauthorizied
+            try {
+                const response = await fetch('http://localhost:9501/protected', { credentials: 'include' });
                 if (response.ok) {
-                    return response.json();
+                    const data = await response.json();
+                    alert(JSON.stringify(data));
                 } else {
                     throw new Error('Failed to fetch protected resource');
                 }
-            })
-            .then(data => {
-                alert(JSON.stringify(data)); // Display the response JSON as an alert
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('An error occurred:', error);
-            });
-        });
-
-        csrfTokenBtn.addEventListener('click', () => {
-            const csrfTokenCookie = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('X-CSRF-Token='))
-                ?.split('=')[1];
-
-            if (csrfTokenCookie) {
-                alert(`CSRF Token from cookie: ${csrfTokenCookie}`);
-            } else {
-                alert('CSRF Token cookie not found');
             }
         });
     </script>

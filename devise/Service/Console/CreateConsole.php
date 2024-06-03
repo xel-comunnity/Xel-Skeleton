@@ -57,25 +57,25 @@ class CreateConsole extends Command
 
         return "<?php
     
-namespace Xel\Devise\Service\Console;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+        namespace Xel\Devise\Service\Console;
+        use Symfony\Component\Console\Command\Command;
+        use Symfony\Component\Console\Input\InputInterface;
+        use Symfony\Component\Console\Output\OutputInterface;
 
-class $classArgument extends Command
-{
-    protected static string $$classArgument;
+        class $classArgument extends Command
+        {
+            protected static string $$classArgument;
 
-    protected function configure(): void
-    {
-    }
+            protected function configure(): void
+            {
+            }
 
-    protected function execute(InputInterface \$input, OutputInterface \$output): int
-    {        
-        return Command::SUCCESS;
-    }
-}
-";
+            protected function execute(InputInterface \$input, OutputInterface \$output): int
+            {        
+                return Command::SUCCESS;
+            }
+        }
+        ";
     }
 
     private function isValidClassName(string $className): false|int

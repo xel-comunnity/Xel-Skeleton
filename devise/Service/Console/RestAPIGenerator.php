@@ -59,10 +59,11 @@ class RestAPIGenerator extends Command
         return "<?php
     
 namespace Xel\\Devise\\Service\\RestApi;
-use DI\DependencyException;
-use DI\\NotFoundException;
-use Psr\\Http\\Message\\ResponseInterface;
+use Exception;
+use Xel\\Devise\\AbstractService;
+use Xel\\Async\\Http\\Responses;
 use Xel\\Async\\Router\\Attribute\\GET;
+
 
 class $classArgument extends AbstractService
 {   
@@ -71,9 +72,12 @@ class $classArgument extends AbstractService
      * @throws NotFoundException
      */
     #[GET(\"/$router\")]
-    public function index(): ResponseInterface
+    public function index(): void
     {
-        return \$this->serverResponse->plain(\"Hello Xel\", 200);
+        \$this->return
+        ->workSpace(function (Responses \$response){
+            \$response->Display('landing.php');
+        });  
     }  
 }
 ";

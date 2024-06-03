@@ -5,9 +5,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Xel\DB\QueryBuilder\Migration\Migration;
-use Xel\DB\QueryBuilder\Migration\Schema;
-use Xel\DB\QueryBuilder\Migration\TableBuilder;
 
 class CreateMigration extends Command
 {
@@ -28,9 +25,7 @@ class CreateMigration extends Command
         $currentDateTime = date('Y-m-d_H-i-s');
         $data = str_replace('-','', $currentDateTime);
         $commandClass = "m_{$data}_$valueClass";
-
-        var_dump($data);
-
+        
         // Validate the class name
         if (!$this->isValidClassName($commandClass)) {
             echo 'Invalid class name. Please provide a valid class name.';

@@ -1,8 +1,6 @@
 <?php
 
 namespace Xel\Devise\Service\Gemstone;
-
-
 use DI\Container;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -17,34 +15,68 @@ use Xel\DB\QueryBuilder\QueryDML;
 
 class GemstoneAuthorization
 {
-    public static function check(Request $request, Response $responses, Container $container): bool
-    {
-        if (!isset($request->cookie['X-Requested-With'])){
-            return false;
-        }else{
-            $data = $request->cookie['X-Requested-With'];
-            try {
-
-                $data = JWT::decode($data, new Key($_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]));
-                try {
-                    if (self::userCheck($data, $container) === false){
-                        return false;
-                    }
-                    return true;
-                } catch (Exception $e) {
-                    echo $e->getMessage();
-
-                    return false;
-                }
-            } catch (Exception $e) {
-                echo $e->getMessage();
-                return false;
-            }
+    /************************************************************************************************************
+     * Authorization check
+     ************************************************************************************************************/
+     public static function check(Request $request, Response $responses, Container $container): bool
+     {
+         if (!isset($request->cookie['X-ACCESS-TOKEN']) && !isset($request->cookie['X-REFRESH-TOKEN'])){
+             return false;
+         }elseif(isset($request->cookie['X-ACCESS-TOKEN']) === false && isset($request->cookie['X-REFRESH-TOKEN']) === true){
+             $data = $request->cookie['X-REFRESH-TOKEN'];
+             try {
+                 $data = JWT::decode($data, new Key($_ENV["GEMSTONE_REFRESH_KEY"], $_ENV["GEMSTONE_ALGO"]));
+                 try {
+ 
+                     // ? check first
+                     if (self::userCheck($data, $container) === false){
+                         return false;
+                     }
+                     // ? crete new access token 
+                     $newAccessToken = JWT::encode((array)$data, $_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]);
+ 
+                     // ? create new access token 
+                     self::middlewareGenerateAccessToken($responses, $newAccessToken);
+ 
+                     return true;
+                 } catch (Exception $e) {
+                     echo $e->getMessage();
+                     return false;
+                 }
+             } catch (Exception $e) {
+                 echo $e->getMessage();
+                 return false;
+             }
+         }elseif(isset($request->cookie['X-ACCESS-TOKEN']) === true && isset($request->cookie['X-REFRESH-TOKEN']) === true){
+             $data = $request->cookie['X-ACCESS-TOKEN'];
+             try {
+                 $data = JWT::decode($data, new Key($_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]));
+                 try {
+                     if (self::userCheck($data, $container) === false){
+                         return false;
+                     }
+                     return true;
+                 } catch (Exception $e) {
+                     echo $e->getMessage();
+ 
+                     return false;
+                 }
+             } catch (Exception $e) {
+                 return false;
+             }
+         }else{
+            self::deleteSession($responses);
+             // ? unset access token 
+             return false;                
         }
-    }
+     } 
 
-    public static function attempt(array|stdClass $data, Responses $responses, Container $container): bool
-    {
+
+    /************************************************************************************************************
+     * Authentication check
+     ************************************************************************************************************/ 
+     public static function attempt(array|stdClass $data, Container $container): bool
+     {
         try {
             /**
              * @var QueryDML $query
@@ -60,10 +92,11 @@ class GemstoneAuthorization
                     return false;
                 }
                 return true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 return false;
             }
-        } catch (Exception $e) {
+
+        } catch (Exception) {
             return false;
         }
     }
@@ -77,39 +110,155 @@ class GemstoneAuthorization
     {
         $data = get_object_vars($user);
         $keys = array_keys($data);
-
+        
         /**
          * @var QueryDML $query
          */
         $query = $container->get('xgen');
-        $result = $query->select([$keys[0], $keys[1]])->from('users')->where('email', '=', $data['email'])->get();
-        if (password_verify($data['password'], $result[0]['password'])){
-            return true;
-        } else {
-            // User check failed
+        $result = $query->select([$keys[0], $keys[1]])->from('users')->where('email', '=', $data['email'])->get() ?? [];
+
+        if(count($result) > 0){
+            if (password_verify($data['password'], $result[0]['password'])){
+                return true;
+            } else {
+                // User check failed
+                return false;
+            }
+        }else{
             return false;
         }
     }
 
-    public static function encode(Responses $responses,stdClass $payload, int $expired): array
-    {
-        $data = get_object_vars($payload);
-        $data['expired'] = time() + $expired;
-        $token = JWT::encode($data, $_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]);
 
+    private static function deleteSession(Response $responses):void{
+        // ? unset access token 
         $responses->setCookie(
-            name : "X-Requested-With",
-            value : $token,
-            expire :  $data['expired'],
+            name : "X-ACCESS-TOKEN",
+            value : '',
+            expires : time() - 3600,
             path : '/',
             domain :'',
             secure : false,
             httponly : true,
-            sameSite : 'lax',
+            samesite : '',
             priority : ''
         );
+
+        // ? unset refresh token 
+        $responses->setCookie(
+            name : "X-REFRESH-TOKEN",
+            value : '',
+            expires : time() - 3600,
+            path : '/',
+            domain :'',
+            secure : false,
+            httponly : true,
+            samesite : '',
+            priority : ''
+        );  
+    }
+
+
+    public static function logout(Responses $responses):void{
+        // ? unset access token 
+        $responses->setCookie(
+            name : "X-ACCESS-TOKEN",
+            value : '',
+            expire : time() - 3600,
+            path : '/',
+            domain :'',
+            secure : false,
+            httponly : true,
+            sameSite : '',
+            priority : ''
+        );
+
+        // ? unset refresh token 
+        $responses->setCookie(
+            name : "X-REFRESH-TOKEN",
+            value : '',
+            expire : time() - 3600,
+            path : '/',
+            domain :'',
+            secure : false,
+            httponly : true,
+            sameSite : '',
+            priority : ''
+        );  
+    }
+
+    /************************************************************************************************************
+     * Token Management
+     ************************************************************************************************************/
+
+    /************************************************************************************************************
+     * Utility
+    ************************************************************************************************************/
+    private static function middlewareGenerateAccessToken(Response $responses, mixed $value):void{
+        // ? create new access token 
+        $responses->setCookie(
+           name : "X-ACCESS-TOKEN",
+           value : $value,
+           expires : time() + $_ENV["GEMSTONE_COOKIE_ACCESS_EXPIRED"],
+           path : '/',
+           domain :'',
+           secure :   $_ENV["GEMSTONE_COOKIE_SECURE"],
+           httponly : $_ENV["GEMSTONE_COOKIE_ONLY"],
+           samesite : $_ENV["GEMSTONE_COOKIE_SAMESITE"],
+           priority : ''
+       );
+
+   }
+
+    private static function generateAccessToken(Responses $responses, mixed $value):void{
+         // ? create new access token 
+         $responses->setCookie(
+            name : "X-ACCESS-TOKEN",
+            value : $value,
+            expire : time() + $_ENV["GEMSTONE_COOKIE_ACCESS_EXPIRED"],
+            path : '/',
+            domain :'',
+            secure :   $_ENV["GEMSTONE_COOKIE_SECURE"],
+            httponly : $_ENV["GEMSTONE_COOKIE_ONLY"],
+            sameSite : $_ENV["GEMSTONE_COOKIE_SAMESITE"],
+            priority : ''
+        );
+
+    }
+
+    private static function generateRefreshToken(Responses $responses,  mixed $value):void{
+        // ? create new access token 
+        $responses->setCookie(
+            name : "X-REFRESH-TOKEN",
+            value : $value,
+            expire : time() + $_ENV["GEMSTONE_COOKIE_ACCESS_EXPIRED"],
+            path : '/',
+            domain :'',
+            secure :   $_ENV["GEMSTONE_COOKIE_SECURE"],
+            httponly : $_ENV["GEMSTONE_COOKIE_ONLY"],
+            sameSite : $_ENV["GEMSTONE_COOKIE_SAMESITE"],
+            priority : ''
+        );
+    }
+    
+
+    public static function giveAuthorization(Responses $responses,stdClass $payload): array
+    {
+        $data = get_object_vars($payload);
+        $data['expired'] = time() + $_ENV['GEMSTONE_COOKIE_ACCESS_EXPIRED'];
+
+        // ? encode the value
+        $access = JWT::encode($data, $_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]);
+        $refresh = JWT::encode($data, $_ENV["GEMSTONE_REFRESH_KEY"], $_ENV["GEMSTONE_ALGO"]);
+
+        // ? set access token 
+        self::generateAccessToken($responses, $access);
+
+        // ? set refresh token 
+        self::generateRefreshToken($responses, $refresh);
+       
         return [
-            'Token' => $token,
+            'Token' => $access,
             'Expired' => $data['expired']
         ];
     }
@@ -119,7 +268,7 @@ class GemstoneAuthorization
         $data = $request->header['Authorization'];
         try {
             return JWT::decode($data, new Key($_ENV["GEMSTONE_SECRET"], $_ENV["GEMSTONE_ALGO"]));
-        }catch (Exception $e){
+        }catch (Exception){
             return false;
         }
     }

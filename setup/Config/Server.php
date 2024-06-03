@@ -9,7 +9,7 @@ return [
             "document_root" => dirname(__DIR__, 2),
             'worker_num' => swoole_cpu_num(),
 //            'task_worker_num'=>16,
-            'task_enable_coroutine' => true, // optional to turn on task coroutine support
+            'task_enable_coroutine' => true,
 //            'daemonize' => 1,
 //            'http_gzip_level' => 9,
 

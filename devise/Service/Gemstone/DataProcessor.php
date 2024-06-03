@@ -52,7 +52,7 @@ trait DataProcessor
 
         array_walk_recursive($data, function (&$value) {
             //$value = preg_replace('/[^a-zA-Z0-9\s]/', '', htmlspecialchars(filter_var($value, FILTER_SANITIZE_STRING), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-            $value = htmlspecialchars(filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $value = htmlspecialchars( htmlentities(filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         });
 
