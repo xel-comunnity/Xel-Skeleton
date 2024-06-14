@@ -44,7 +44,6 @@ class GemstoneAuthorization
                      return false;
                  }
              } catch (Exception $e) {
-                 echo $e->getMessage();
                  return false;
              }
          }elseif(isset($request->cookie['X-ACCESS-TOKEN']) === true && isset($request->cookie['X-REFRESH-TOKEN']) === true){
@@ -56,12 +55,10 @@ class GemstoneAuthorization
                          return false;
                      }
                      return true;
-                 } catch (Exception $e) {
-                     echo $e->getMessage();
- 
+                 } catch (Exception) {
                      return false;
                  }
-             } catch (Exception $e) {
+             } catch (Exception) {
                  return false;
              }
          }else{

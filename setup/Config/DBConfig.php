@@ -1,5 +1,6 @@
 <?php
-return [
+return
+[
     'driver' => 'mysql',
     'host' => 'localhost',
     'charset' => 'utf8mb4',
@@ -17,3 +18,4 @@ return [
     'migration' => "\\Xel\\Migration",
     'pathMigration' => __DIR__."/../../migration"
 ];
+

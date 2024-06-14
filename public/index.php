@@ -9,5 +9,4 @@ $app = new App();
 try {
     $app->init();
 } catch (DependencyException|NotFoundException|Exception $e) {
-    echo "error : ".$e->getMessage();
 }

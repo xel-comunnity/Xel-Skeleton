@@ -33,7 +33,7 @@ class ServerCommand extends Command
         try {
             $app->init();
         } catch (DependencyException|NotFoundException|Exception $e) {
-            echo "error : ".$e->getMessage();
+//            echo "error : ".$e->getMessage();
         }
         return Command::SUCCESS;
     }

@@ -16,7 +16,8 @@ class users extends Migration
         Schema::create('users',function (TableBuilder $tableBuilder){
             $tableBuilder->id()
                 ->string('name')
-                ->string('email');
+                ->string('email')
+                ->string('password');
         })->execute();
     }
 

@@ -6,12 +6,15 @@ use DI\NotFoundException;
 use Exception;
 use Xel\Async\Http\Responses;
 use Xel\Async\Router\Attribute\GET;
+use Xel\DB\QueryBuilder\QueryDML;
 use Xel\Devise\AbstractService;
+
 
 class Service extends AbstractService
 {
     /**
-     * @throws Exception
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     #[GET("/")]
     public function index():void
@@ -33,5 +36,34 @@ class Service extends AbstractService
         ->workSpace(function (Responses $response){
             $response->Display('auth/auth.php');
         });  
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    #[GET("/json")]
+    public function json(): void
+    {
+        $this->return
+            ->workSpace(function (Responses $response, QueryDML $queryDML){
+                $data = $queryDML->select(['id','email'])->from('users')->get();
+                $response->json($data,false,200);
+            });
+    }
+
+    /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    #[GET("/logger")]
+    public function logger(): void
+    {
+        $this->return
+            ->workSpace(function (Responses $response){
+                    $response->json(["duar meme"], false, 200);
+            });
     }
 }

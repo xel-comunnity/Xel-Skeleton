@@ -1,26 +1,38 @@
 <?php
 
 use Monolog\Level;
-use Monolog\Logger;
 use Xel\Logger\LoggerSchedule;
 
 return [
-    "mode" => "single", // change to stack to separate the logger,
-    "single_logging_generation" => LoggerSchedule::Daily->apply(),
+    "mode" => "single", // change to stacked to separate the logger,
+    "single_logging_generation" => [
+        'level' => Level::Debug, // Log level for the single logger
+        'format' => LoggerSchedule::Daily->apply(), // Log file name format
+    ],
     "path" => __DIR__."/../../writeable/log/xel.log",
     "collections" => [
         "my_logger" => [
-            "channel" => new Logger("my_logger"),
-            "path" => __DIR__."/../..my_logger.log",
-            "logging_generation"=> LoggerSchedule::Daily->apply(),
-            "level" => Level::Debug,
+            "path" => __DIR__."/../../writeable/log/my_logger.log",
+            "logging_generation" => [
+                'level' => Level::Debug, // Log level for the single logger
+                'format' => LoggerSchedule::Daily->apply(), // Log file name format
+            ],
+
+        ],
+        "security" => [
+            "path" => __DIR__."/../../writeable/log/security/security.log",
+            "logging_generation" => [
+                'level' => Level::Error, // Log level for the single logger
+                'format' => LoggerSchedule::Monthly->apply(), // Log file name format
+            ],
         ],
 
-        "security" => [
-            "channel" => new Logger("security"),
-            "path" => __DIR__.'/security.log',
-            "logging_generation"=> LoggerSchedule::Daily->apply(),
-            "level" => Level::Error,
+        "system" => [
+            "path" =>__DIR__."/../../writeable/log/system/system.log",
+            "logging_generation" => [
+                'level' => Level::Critical, // Log level for the single logger
+                'format' => LoggerSchedule::Monthly->apply(), // Log file name format
+            ],
         ],
     ],
 ];

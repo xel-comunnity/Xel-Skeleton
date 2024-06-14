@@ -9,10 +9,10 @@ use Exception;
 use Xel\Async\Http\Application_v3;
 use Xel\Container\Dock;
 use Xel\Container\XelContainer;
-use Xel\Logger\ApplicationLogger;
 use function Xel\Async\Router\Attribute\Generate\{loaderClass};
 use function Xel\Setup\Dock\DockEntry;
 
+date_default_timezone_set('Asia/Jakarta');
 final readonly class App
 {
     /**
@@ -53,14 +53,6 @@ final readonly class App
         $loaderClass = loaderClass($class, $cache, $_ENV['BUILD']);
 
         /**
-         * Logger init
-         */
-        $loggerConfig = $dependency->get('Logging');
-        $FireHandler =  $dependency->get('FirePHPHandler');
-
-        ApplicationLogger::init($loggerConfig, $FireHandler);
-
-        /**
          * Launch Instance
          */
         $app = new Application_v3(
@@ -69,6 +61,7 @@ final readonly class App
             $dependency->get('dbConfig'),
             $dependency
         );
+
         $app
             ->gemstoneLimiter()
             ->router()

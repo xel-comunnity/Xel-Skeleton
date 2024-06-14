@@ -21,10 +21,7 @@ class CreateMigration extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $valueClass = $input->getArgument('value');
-        date_default_timezone_set('Asia/Jakarta');
-        $currentDateTime = date('Y-m-d_H-i-s');
-        $data = str_replace('-','', $currentDateTime);
-        $commandClass = "m_{$data}_$valueClass";
+        $commandClass = "$valueClass";
         
         // Validate the class name
         if (!$this->isValidClassName($commandClass)) {

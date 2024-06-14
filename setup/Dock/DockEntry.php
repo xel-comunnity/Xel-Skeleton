@@ -7,7 +7,9 @@ use Xel\Async\Http\Response;
 use Xel\Async\Router\RouterRunner;
 use Xel\Devise\AbstractService;
 use Xel\Devise\Job\test;
-use function DI\create;
+use Xel\Logger\Loggers;
+use Xel\Logger\LoggerService;
+use function DI\{create, get};
 use function Xel\Container\dependency\containerEntry;
 use function Xel\Devise\Service\AppClassBinder\serviceMiddlewareGlobals;
 use function Xel\Devise\Service\AppClassBinder\serviceModelRegister;
@@ -36,6 +38,7 @@ function DockEntry(): array
              */
             "Logging" => $logging,
             "FirePHPHandler" => create(FirePHPHandler::class),
+            "log" =>  create(LoggerService::class)->constructor($logging, get('FirePHPHandler')),
 
             /**
              * Router Config
@@ -82,7 +85,6 @@ function DockEntry(): array
              * Display Path
              */
             'display_path' => __DIR__."/../../devise/Display/",
-            
         ]
     );
 }
