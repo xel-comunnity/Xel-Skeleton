@@ -30,5 +30,4 @@ class Projects
             ->from($this->table)
             ->get();
     }
-
 }

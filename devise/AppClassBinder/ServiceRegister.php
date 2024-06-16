@@ -9,6 +9,7 @@ use Xel\Devise\Service\Console\MigrationDrop;
 use Xel\Devise\Service\Console\MigrationMigrate;
 use Xel\Devise\Service\Console\MigrationMigrateFresh;
 use Xel\Devise\Service\Console\MigrationRollback;
+use Xel\Devise\Service\Console\MigrationSeeder;
 use Xel\Devise\Service\Console\ProductionCommand;
 use Xel\Devise\Service\Console\RestAPIGenerator;
 use Xel\Devise\Service\Console\RouterDelete;
@@ -18,6 +19,7 @@ use Xel\Devise\Service\Console\RouterRegenerate;
 use Xel\Devise\Service\Console\ServerCommand;
 use Xel\Devise\Service\Console\TokenGeneratorConsole;
 use Xel\Devise\Service\RestApi\Auth\Authentication;
+use Xel\Devise\Service\RestApi\Crud;
 use Xel\Devise\Service\RestApi\csrfTokenMaker\CsrfTokenMaker;
 use Xel\Devise\Service\RestApi\Service;
 
@@ -27,6 +29,7 @@ function serviceRegister(): array
         Service::class,
         Authentication::class,
         CsrfTokenMaker::class,
+        Crud::class
     ];
 }
 
@@ -59,6 +62,7 @@ function serviceConsoleRegister():array
         MigrationRollback::class,
         MigrationDrop::class,
         CreateMigration::class,
-        TokenGeneratorConsole::class
+        TokenGeneratorConsole::class,
+        MigrationSeeder::class
     ];
 }

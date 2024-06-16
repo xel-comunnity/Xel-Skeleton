@@ -24,7 +24,6 @@ class Authentication extends AbstractService
     public function login(): void
     {
         $sanitize = $this->sanitizeData();
-
         $this->return
             ->workSpace(function (Responses $responses, QueryDML $queryDML) use ($sanitize){
                 // check the user is valid user
@@ -35,7 +34,6 @@ class Authentication extends AbstractService
                     $this->auth()->storeToCookie($responses, $token);
                     $responses->json('success authenticated', false, 201);
                 }
-
                 // if not request invalid
                 $responses->json('email or password not valid', false, 401);
             });

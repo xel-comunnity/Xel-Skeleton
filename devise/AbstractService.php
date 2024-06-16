@@ -10,8 +10,8 @@ use Xel\Async\CentralManager\CentralManagerRunner;
 use Xel\Async\Gemstone\Csrf_Shield;
 use Xel\DB\QueryBuilder\QueryDML;
 use Xel\Devise\Service\Gemstone\auth\GemAuthorization;
-use Xel\Devise\Service\Gemstone\DataProcessor;
-use Xel\Devise\Service\Gemstone\FileProcessor;
+use Xel\Devise\Service\Gemstone\request\DataProcessor;
+use Xel\Devise\Service\Gemstone\request\FileProcessor;
 use Xel\Logger\LoggerService;
 
 abstract class AbstractService

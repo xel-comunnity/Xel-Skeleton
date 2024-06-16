@@ -24,7 +24,6 @@ class Service extends AbstractService
         });
     }
 
-
     /**
      * @throws DependencyException
      * @throws NotFoundException
@@ -49,6 +48,7 @@ class Service extends AbstractService
         $this->return
             ->workSpace(function (Responses $response, QueryDML $queryDML){
                 $data = $queryDML->select(['id','email'])->from('users')->get();
+                var_dump($_ENV['HOST']);
                 $response->json($data,false,200);
             });
     }

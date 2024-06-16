@@ -31,7 +31,10 @@ return [
              'allowCredentials' => true,
              'whitelists' => [
                 'http://localhost:9501',
-                '127.0.0.1:80',
+                'http://127.0.0.1:9501',
+                 'http://192.168.0.112:9501',
+                 'http://192.168.0.112:3000',
+                 "*"
              ]
          ],
      ],

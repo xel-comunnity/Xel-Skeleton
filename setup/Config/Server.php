@@ -3,7 +3,7 @@ return [
     'api_server' => [
         'host' => 'http://localhost',
         'port' => 9501,
-        'mode' => 1,
+        'mode' => 2,
         'options' => [
             /**
              * Log
@@ -15,7 +15,9 @@ return [
              * server setup path and static handler
              */
             "enable_static_handler" => true,
-            "document_root" => dirname(__DIR__, 2),
+            "document_root" => __DIR__."/../../",
+
+
 
 
             'enable_delay_receive' => true,
@@ -36,19 +38,16 @@ return [
             /**
              * Setup worker mode for utilize cpu and task,
              */
-//            'worker_num' => 1,
+            'worker_num' => swoole_cpu_num(),
 //            'task_worker_num'=>16,
             'task_enable_coroutine' => true,
-
-
-
 
             /**
              * secure concurrent limit per ip connection
              */
-            'max_connection'       => 100,
-            // 'send_yield'           => true,
-            // 'send_timeout'         => 1.5,
+             'max_connection'       => 50,
+             'send_yield'           => true,
+             'send_timeout'         => 1.5,
         ],
     ],
 ];

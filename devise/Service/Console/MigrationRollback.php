@@ -5,9 +5,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Xel\Devise\BaseData\QueryBuilder\Migration\Connection;
-use Xel\Devise\BaseData\QueryBuilder\Migration\MigrationManager;
-use Xel\Devise\BaseData\QueryBuilder\MigrationLoader;
+use Xel\DB\QueryBuilder\Migration\Connection;
+use Xel\DB\QueryBuilder\Migration\MigrationManager;
+use Xel\DB\QueryBuilder\MigrationLoader;
 
 class MigrationRollback extends Command
 {
@@ -26,17 +26,21 @@ class MigrationRollback extends Command
         $step = intval($data);
 
         $config = require __DIR__."/../../../setup/Config/DBConfig.php";
-        $dbname = explode('=', $config['dsn']);
-        $config["dsn"].=";charset=utf8mb4";
         try {
-            $conn = new Connection($config, $dbname[2]);
+            $conn = new Connection($config);
             $load = new MigrationLoader(__DIR__."/../../../migration/", $config['migration']);
             $load->load();
+            if (!$conn->isDatabaseExists()){
+                $conn->createDatabase();
+                $conn = null;
+            }
 
-            MigrationManager::init($conn->getConnection(), $load);
+            $x = new Connection($config);
+
+            MigrationManager::init($x->getConnection(), $load);
             MigrationManager::rollback($step);
 
-            $output->writeln("Migration Rollback to Step $step");
+            $output->writeln("Migration Success");
 
             return Command::SUCCESS;
 

@@ -12,7 +12,8 @@
         "psr-4": {
             "Xel\\Devise\\": "devise/",
             "Xel\\Setup\\" : "setup/",
-            "Xel\\Migration\\": "migration/"
+            "Xel\\Migration\\": "migration/",
+            "Xel\\MigrationSeeder\\": "migration_seeder/"
         },
         "files": [
             "setup/Dock/DockEntry.php",
@@ -27,7 +28,8 @@
         "vlucas/phpdotenv": "^5.6@dev",
         "ext-pdo": "*",
         "firebase/php-jwt": "dev-main",
-        "swoole/ide-helper": "@dev"
+        "swoole/ide-helper": "@dev",
+        "ezyang/htmlpurifier": "dev-master"
     },
     "minimum-stability": "dev",
     "scripts": {

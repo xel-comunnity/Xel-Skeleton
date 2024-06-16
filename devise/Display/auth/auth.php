@@ -33,6 +33,7 @@
         </div>
     </div>
 
+
     <script type="module">
         
         import { makeRequestWithCsrfToken, makeRequest } from '../../public/js/request.js';
