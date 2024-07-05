@@ -45,7 +45,7 @@ return [
             /**
              * secure concurrent limit per ip connection
              */
-             'max_connection'       => 50,
+            'max_connection'       => 100,
              'send_yield'           => true,
              'send_timeout'         => 1.5,
         ],

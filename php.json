@@ -1,0 +1,26 @@
+Running 30s test @ http://localhost:9501/users
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    61.74ms   11.44ms 205.81ms   85.57%
+    Req/Sec   397.67     64.16   510.00     74.50%
+  47543 requests in 30.03s, 30.11MB read
+  Socket errors: connect 0, read 0, write 0, timeout 33
+Requests/sec:   1582.92
+Transfer/sec:      1.00MB
+{
+  "requests": 47543,
+  "duration_in_microseconds": 30034942,
+  "bytes": 31568552,
+  "requests_per_sec": 1582.92,
+  "bytes_transfer_per_sec": 1051060.86,
+  "latency_min": 24246.00,
+  "latency_max": 205808.00,
+  "latency_mean": 61741.01,
+  "latency_stdev": 11444.88,
+  "latency_distribution": {
+    "p50": 60225.00,
+    "p75": 63857.00,
+    "p90": 70699.00,
+    "p99": 111876.00
+  }
+}

@@ -20,10 +20,26 @@ class Service extends AbstractService
     public function index():void
     {
         $this->return->workSpace(function (Responses $response){
-            $response->Display('landing.php');
+            $response->json(['hello world'], false, 200);
         });
     }
 
+     /**
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    #[GET("/users")]
+    public function json(): void
+    {
+        $this->return
+            ->workSpace(function (Responses $response, QueryDML $queryDML){
+                $data = $queryDML->select(['id','name','email'])->from('users')->get();
+                $response->json($data,false,200);
+            });
+    }
+
+    
     /**
      * @throws DependencyException
      * @throws NotFoundException
@@ -37,33 +53,20 @@ class Service extends AbstractService
         });  
     }
 
-    /**
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws Exception
-     */
-    #[GET("/json")]
-    public function json(): void
-    {
-        $this->return
-            ->workSpace(function (Responses $response, QueryDML $queryDML){
-                $data = $queryDML->select(['id','email'])->from('users')->get();
-                var_dump($_ENV['HOST']);
-                $response->json($data,false,200);
-            });
-    }
+   
 
     /**
      * @throws DependencyException
      * @throws NotFoundException
      * @throws Exception
      */
-    #[GET("/logger")]
-    public function logger(): void
+    #[GET("/xss/{name}")]
+    public function logger($name): void
     {
+        $data = $this->sanitizeUrlParam($name);
         $this->return
-            ->workSpace(function (Responses $response){
-                    $response->json(["duar meme"], false, 200);
+            ->workSpace(function (Responses $response) use ($data){
+                    $response->json(["sanitized result" => $data], false, 200);
             });
     }
 }

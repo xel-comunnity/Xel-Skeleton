@@ -19,7 +19,10 @@ readonly class GemAuthorization
     {
         // ? fetch auth data
         try {
-            $authDataFetch = $this->queryDML->select()->from('users')->where($this->validationParam[0], '=', $param[$this->validationParam[0]])->get();
+            $authDataFetch = $this->queryDML
+                ->select()->from('users')
+                ->where($this->validationParam[0], '=', $param[$this->validationParam[0]])
+                ->get();
             if (count($authDataFetch) > 0){
                $check = password_verify($param[$this->validationParam[1]], $authDataFetch[0][$this->validationParam[1]]);
 
@@ -97,6 +100,5 @@ readonly class GemAuthorization
         }catch (Exception $e){
             throw new Exception($e->getMessage());
         }
-
     }
 }

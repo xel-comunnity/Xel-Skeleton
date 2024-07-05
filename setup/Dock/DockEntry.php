@@ -7,7 +7,6 @@ use Xel\Async\Router\RouterRunner;
 use Xel\Devise\AbstractService;
 use Xel\Devise\Job\test;
 use Xel\Logger\LoggerService;
-use Xel\Migration\Seeder\SeederMaker;
 use function DI\{create, get};
 use function Xel\Container\dependency\containerEntry;
 use function Xel\Devise\Service\AppClassBinder\serviceMiddlewareGlobals;

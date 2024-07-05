@@ -30,10 +30,12 @@ return [
              'maxAge' => 86400,
              'allowCredentials' => true,
              'whitelists' => [
-                'http://localhost:9501',
-                'http://127.0.0.1:9501',
+                 'http://localhost:9501',
+                 'http://localhost:9502',
+                 'http://127.0.0.1:9502',
+                 'http://127.0.0.1:9501',
                  'http://192.168.0.112:9501',
-                 'http://192.168.0.112:3000',
+                 'http://192.168.240.100:3000',
                  "*"
              ]
          ],

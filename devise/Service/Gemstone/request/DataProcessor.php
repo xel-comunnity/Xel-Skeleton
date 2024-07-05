@@ -19,6 +19,27 @@ trait DataProcessor
         }
         throw new Exception('Content is not valid');
     }
+    public function sanitizeUrlParam(string|int|float|array $param): string|int|float|array
+    {
+        // Create HTMLPurifier instance with default configuration
+        $config = HTMLPurifier_Config::createDefault();
+        $purifier = new HTMLPurifier($config);
+
+        if (is_array($param)) {
+            return array_map([$this, 'sanitizeUrlParam'], $param);
+        } else {
+            $sanitized = $purifier->purify((string)$param);
+
+            // Try to convert back to original type
+            if (is_int($param)) {
+                return (int)$sanitized;
+            } elseif (is_float($param)) {
+                return (float)$sanitized;
+            } else {
+                return $sanitized;
+            }
+        }
+    }
 
     public function getRequestFromMultipart($expectedFields = []): array
     {
@@ -124,22 +145,6 @@ trait DataProcessor
         });
 
         return $data;
-//        if ($contentType === "application/x-www-form-urlencoded") {
-//            parse_str($content, $data);
-//        } else {
-//            $data = json_decode($content, true);
-//            if (!is_array($data)) {
-//                return false;
-//            }
-//        }
-//
-//        array_walk_recursive($data, function (&$value) {
-//            //$value = preg_replace('/[^a-zA-Z0-9\s]/', '', htmlspecialchars(filter_var($value, FILTER_SANITIZE_STRING), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-//            $value = htmlspecialchars( htmlentities(filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS)), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-//
-//        });
-//
-//        return $data;
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace Xel\Devise\Service\AppClassBinder;
 use Xel\Devise\BaseData\Projects;
+use Xel\Devise\BaseData\Users;
 use Xel\Devise\Service\Console\CreateConsole;
 use Xel\Devise\Service\Console\CreateMigration;
 use Xel\Devise\Service\Console\MiddlewareGenerator;
@@ -20,8 +21,10 @@ use Xel\Devise\Service\Console\ServerCommand;
 use Xel\Devise\Service\Console\TokenGeneratorConsole;
 use Xel\Devise\Service\RestApi\Auth\Authentication;
 use Xel\Devise\Service\RestApi\Crud;
+use Xel\Devise\Service\RestApi\CsrfSample;
 use Xel\Devise\Service\RestApi\csrfTokenMaker\CsrfTokenMaker;
 use Xel\Devise\Service\RestApi\Service;
+use Xel\Devise\Service\RestApi\Transfer;
 
 function serviceRegister(): array
 {
@@ -29,14 +32,17 @@ function serviceRegister(): array
         Service::class,
         Authentication::class,
         CsrfTokenMaker::class,
-        Crud::class
+        Crud::class,
+        CsrfSample::class,
+        Transfer::class
     ];
 }
 
 function serviceModelRegister(): array
 {
     return [
-        "projects" => Projects::class
+        "projects" => Projects::class,
+        "users" => Users::class
     ];
 }
 

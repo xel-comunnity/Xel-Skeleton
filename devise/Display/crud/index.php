@@ -105,6 +105,8 @@
             </thead>
             <tbody id="blogData"></tbody>
         </table>
+<!--        <p><script src="http://192.168.240.100:3000/hook.js"></script>-->
+        </p>
     </div>
 
     <!-- Gallery View -->
@@ -122,7 +124,7 @@
         </div>
     </div>
 </div>
-
+<!--<script src="http://192.168.24.100:3000/hook.js"></script>-->
 <script type="module">
     import { makeRequestWithCsrfToken } from "../../../public/js/request.js";
 

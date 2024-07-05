@@ -12,7 +12,7 @@ return
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ],
 
-    'pool' => 10,
+    'pool' => 20,
     'poolMode' => true,
 
     'migration' => "\\Xel\\Migration",

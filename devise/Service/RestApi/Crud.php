@@ -97,7 +97,7 @@ class Crud extends AbstractService
                     $data['image'] = $image[0]['with_endpoint'];
 
                     $queryDML->insert('crud', $data)->run();
-                    $response->json([],'false', 201);
+                    $response->json($data,'false', 201);
 
                 }catch (Exception $e){
                     $response->json(["response" => $e->getMessage(), "code" => $e->getCode()],'false', 427);
@@ -105,6 +105,39 @@ class Crud extends AbstractService
 
             });
     }
+
+
+    #[POST("/crud/xss")]
+    public function createxss(): void
+    {
+        $this->return
+            ->workSpace(function (Responses $response, QueryDML $queryDML){
+                $data = [
+                    'name' => $this->serverRequest->post['name'],
+                    'description' => $this->serverRequest->post['description'],
+                ];
+
+                try {
+                    $image = $this->FileHandlerMoveWithRuleRestFull(
+                        [FileConstants::MIME_IMAGE_JPEG, FileConstants::MIME_IMAGE_PNG, FileConstants::MIME_IMAGE_WEBP],
+                        5 * 1024 * 1024,
+                        true,
+                        'crud/images',
+                        'images'
+                    );
+                    $data['image'] = $image[0]['with_endpoint'];
+
+                    $queryDML->insert('crud', $data)->run();
+                    $response->json($data,'false', 201);
+
+                }catch (Exception $e){
+                    $response->json(["response" => $e->getMessage(), "code" => $e->getCode()],'false', 427);
+                }
+
+            });
+    }
+
+
 
     /**
      * @throws DependencyException
